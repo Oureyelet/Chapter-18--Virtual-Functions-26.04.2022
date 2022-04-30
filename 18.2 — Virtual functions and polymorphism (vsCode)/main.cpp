@@ -136,7 +136,7 @@ int main()
 
     //Do not call virtual functions from constructors or destructors:
 
-    //The downside of virtual functions:
+    //The downcal functions:
     
 
 
