@@ -3,7 +3,7 @@
 class Base
 {
 public:
-    ~Base() // note: not virtual
+    virtual ~Base() // note: virtual
     {
         std::cout << "Calling ~Base()\n";
     }
@@ -20,11 +20,24 @@ public:
     {
     }
 
-    ~Derived() // note: not virtual (your compiler may warn you about this)
+    virtual ~Derived() // note: virtual
     {
         std::cout << "Calling ~Derived()\n";
         delete[] m_array;
     }
+};
+
+class A
+{
+public:
+    virtual ~A() = default;
+    virtual const char* getName() const { return "A"; }
+};
+
+class B: public A
+{
+public:
+    virtual const char* getName() const { return "B"; }
 };
 
 int main()
@@ -35,6 +48,17 @@ int main()
     Base* base{ derived };
 
     delete base;
+
+    //Virtual assignment:
+
+    //Ignoring virtualization:
+    A aDerived{};
+    const A &bBase{ aDerived };
+    // Calls A::getName() instead of the virtualized B::getName()
+    std::cout << bBase.A::getName() << '\n';
+
+    //Should we make all destructors virtual?:
+    
 
     return 0;
 }
