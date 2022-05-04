@@ -2,6 +2,7 @@
 #include <string>
 #include <utility>
 #include <string_view>
+#include <cmath> // for sqrt()
 
 class Base
 {
@@ -65,6 +66,36 @@ public:
     const char* speak() const override { return "Moo"; }
 };
 
+class IErrorLog
+{
+public:
+    virtual bool openLog(const char* filename) = 0;
+    virtual bool closeLog() = 0;
+    virtual bool writeError(const char* errorMessage) = 0;
+
+    virtual ~IErrorLog() {}; // make a virtual destructor in case we delete an IErrorLog pointer, so the proper derived destructor is called
+};
+
+class FileErrorLog
+{
+public:
+    virtual void riteError(std::string_view message) const { std::cout << message << '\n'; }
+};
+
+double mySqrt(double value, IErrorLog& log)
+{
+    if(value < 0.0)
+    {
+        log.writeError("Tried to take square root of value less than 0");
+        return 0.0;
+    }
+    else
+    {
+        return std::sqrt(value);
+    }
+}
+
+
 int main()
 {
     //Pure virtual (abstract) functions and abstract base classes:
@@ -77,6 +108,9 @@ int main()
     //Pure virtual functions with bodies:
 
     //Interface classes:
+    
+    //Pure virtual functions and the virtual table:
+    
 
 
     return 0;
