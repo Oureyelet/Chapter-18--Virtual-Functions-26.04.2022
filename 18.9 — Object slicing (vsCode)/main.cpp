@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+#include <functional> // for std::reference_wrapper
 
 class Base
 {
@@ -68,8 +70,7 @@ int main()
     printName_by_references(*ptr);
     printName_by_references(derived);
 
-    //Slicing vectors:
-
+    //TEST FOR FUN:
     std::string array[3]{ ref.getName(), ptr->getName(), base.getName() };
     for(int i{ 0 }; i < std::size(array); ++i)
     {
@@ -83,6 +84,40 @@ int main()
         std::cout << array_test->getValue() << ' ';
     }
     std::cout << std::endl;
+
+    //Slicing vectors:
+    std::vector<Base*> v{};
+
+    Base b{ 5 };// b and d can't be anonymous objects
+    Derived d{ 6 };
+    
+    v.push_back(&b);
+    v.push_back(&d);
+
+    // Print out all of the elements in our vector
+    for( const auto& element : v )
+        std::cout << "I'm a " << element->getName() << " with value " << element->getValue() << '\n';
+
+
+    //same example with // for std::reference_wrapper:
+
+    std::vector<std::reference_wrapper<Base>> t{};// a vector of reassignable references to Base
+
+    Base o{ 12 };// b and d can't be anonymous objects
+    Derived p{ 13 };
+
+    t.push_back(o);// add a Base object to our vector
+    t.push_back(p);// add a Derived object to our vector
+
+    // Print out all of the elements in our vector
+	// we use .get() to get our element out of the std::reference_wrapper
+    for(const auto& element : t)// element has type const std::reference_wrapper<Base>&
+        std::cout << "I am a " << element.get().getName() << " with value " << element.get().getValue() << '\n';
+
+    //The Frankenobject:
+    
+
+    
 
     return 0;
 }
