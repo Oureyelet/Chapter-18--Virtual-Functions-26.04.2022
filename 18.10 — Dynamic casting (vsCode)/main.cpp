@@ -66,7 +66,7 @@ int main()
 
     Derived* d{ dynamic_cast<Derived*>(b) }; // use dynamic cast to convert Base pointer into Derived pointer
     
-    //dynamic_cast failure:
+    //dynamic_cast failure: :)
 
     if(d)// make sure d is non-null:  So simple check !
         std::cout << "The name of the Derived is: " << d->getName() << '\n';
@@ -88,7 +88,7 @@ int main()
     //Downcasting vs virtual functions:
 
     //A warning about dynamic_cast and RTTI:
-    
+
 
 
     
