@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <string_view>
-#include <array>
+#include <vector>
 
 class Shape
 {
@@ -17,45 +17,81 @@ public:
 
 };
 
-class Triangle: public Shape
+class Point
 {
-protected:
+private:
     int m_x{};
     int m_y{};
     int m_z{};
 
 public:
-    Triangle(int x, int y, int z)
-        : m_x{ x }, m_y{ y }, m_z{ z }
+    Point() = default;
+
+    Point(int x, int y, int z)
+        : m_x{ x }, m_y{ z }, m_z{ z }
     {
     }
 
+    friend std::ostream& operator<<(std::ostream& out, const Point& point)
+    {
+        out << "Point( " << point.m_x << ", " << point.m_y << ", " << point.m_z << " )";
+        return out;
+    }
 
 };
 
-class Circle: public Shape, public Triangle
+
+class Triangle: public Shape
 {
-protected:
-    int m_center_Point{};
-    int m_radius{};
+private:
+    Point m_x;
+    Point m_y;
+    Point m_z;
 
 public:
-    Circle(int x, int y, int z, int center_Point)
-        : Triangle{ x, y, z }, m_center_Point{ center_Point }
+    Triangle(const Point& p1, const Point& p2, const Point& p3)
+        :  m_x{ p1 }, m_y{ p2 }, m_z{ p3 }
+    {   
+    }
+
+    std::ostream& print(std::ostream& out) const override
+    {
+        return out << "Triangle(" << m_x << ", " << m_y << ", " << m_z << ')'; 
+    }
+
+};
+
+class Circle: public Shape
+{
+protected:
+    int m_radius{};
+    Point m_x;
+
+public:
+    Circle(const Point& p1, int radius)
+        :  m_x{ p1 }, m_radius{ radius }
     {
     }
 
     std::ostream& print(std::ostream& out) const override
     {
-        out << 
+       return out << "Circle(" << m_x << ",m_radius " << m_radius << ')'; 
     }
 };
 
 int main()
 {
-    
-    
+    Circle c{ Point{ 1, 2, 3 }, 7 };
+    std::cout << c << '\n';
 
+    Triangle t{ Point{1, 2, 3}, Point{4, 5, 6}, Point{7, 8, 9} };
+    std::cout << t << '\n';
+    
+    std::vector<Shape*> v{
+        new Circle{Point{1, 2, 3}, 7},
+        new Triangle{Point{1, 2, 3}, Point{4, 5, 6}, Point{7, 8, 9}},
+        new Circle{4, 5, 6}, 3}
+    };
 
     return 0;
 }
