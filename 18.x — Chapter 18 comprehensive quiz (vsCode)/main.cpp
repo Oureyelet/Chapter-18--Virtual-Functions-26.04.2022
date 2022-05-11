@@ -2,6 +2,7 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include <algorithm> // for std::max_element
 
 class Shape
 {
@@ -77,7 +78,18 @@ public:
     {
        return out << "Circle(" << m_x << ",m_radius " << m_radius << ')'; 
     }
+
+    int getRadius() const { return m_radius; }
 };
+
+Shape& getLargestRadius(std::vector<Shape*> shape)
+{
+    int* i{ std::max_element(std::begin(shape), std::end(shape)) };
+
+    return i;
+    //std::cout << *std::max_element(std::begin(shape), std::end(shape));
+    
+}
 
 int main()
 {
@@ -87,11 +99,27 @@ int main()
     Triangle t{ Point{1, 2, 3}, Point{4, 5, 6}, Point{7, 8, 9} };
     std::cout << t << '\n';
     
-    std::vector<Shape*> v{
+    std::vector<Shape*> v
+    {
         new Circle{Point{1, 2, 3}, 7},
         new Triangle{Point{1, 2, 3}, Point{4, 5, 6}, Point{7, 8, 9}},
-        new Circle{4, 5, 6}, 3}
+        new Circle{Point{4, 5, 6}, 3}
     };
+
+    // print each shape in vector v on its own line here
+    for(const auto* element : v)
+    {
+        std::cout << *element << '\n';
+    }
+    std::cout << std::endl;
+
+    std::cout << "The largest radius is: " << getLargestRadius(v);
+
+    for(const auto* element : v)
+    {
+        delete element;
+    }
+    v.clear();
 
     return 0;
 }
