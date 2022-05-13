@@ -69,6 +69,8 @@ protected:
     Point m_x;
 
 public:
+    Circle() = default;
+
     Circle(const Point& p1, int radius)
         :  m_x{ p1 }, m_radius{ radius }
     {
@@ -82,13 +84,19 @@ public:
     int getRadius() const { return m_radius; }
 };
 
-Shape& getLargestRadius(std::vector<Shape*> shape)
+int getLargestRadius(const std::vector<Shape*>& shape)
 {
-    int* i{ std::max_element(std::begin(shape), std::end(shape)) };
+    int largestRadius{ 0 };
 
-    return i;
-    //std::cout << *std::max_element(std::begin(shape), std::end(shape));
+    for(const auto* element : shape)
+    {
+        if(auto* c{ dynamic_cast<const Circle*>(element) })
+        {
+            largestRadius = std::max(largestRadius, c->getRadius());
+        }
+    }
     
+    return largestRadius;
 }
 
 int main()
